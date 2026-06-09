@@ -20,6 +20,11 @@ A Telegram bot that extracts product information from messages and generates AI-
 - GitHub API
 - ImgBB API
 
+## Deployment
+
+- Deploy this with Render 
+- Always Active with uptimerobot
+
 ## Setup Instructions 🚀
 
 1. Clone the repository
