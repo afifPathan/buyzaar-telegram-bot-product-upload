@@ -1,10 +1,25 @@
+
+// Add this at the VERY TOP 
+const express = require("express");
+
+const app = express();
+
+app.get("/", (req, res) => {
+  res.send("Buyzaar Bot Running");
+});
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on ${PORT}`);
+});
+
 require('dotenv').config();
 
 const TelegramBot = require('node-telegram-bot-api');
 const githubService = require('./githubService');
 const groqService = require('./groqService');
 const AIService = require('./aiService');
-const bufferService = require('./bufferService'); // Add this
 
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: true });
 console.log('🤖 Bot running...');
