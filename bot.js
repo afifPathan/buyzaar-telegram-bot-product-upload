@@ -57,31 +57,6 @@ function formatPost(emoji, platform, content) {
 }
 
 // ===============================
-// AUTO-POST TO BUFFER
-// ===============================
-
-async function autoPostToBuffer(posts, imageUrl) {
-  if (!process.env.BUFFER_ACCESS_TOKEN) {
-    console.log('⚠️ BUFFER_ACCESS_TOKEN not set. Skipping auto-post.');
-    return { success: false, message: 'Buffer API key missing' };
-  }
-  
-  try {
-    const results = await bufferService.postToAllPlatforms(posts, imageUrl);
-    const queueStatus = await bufferService.getQueueStatus();
-    
-    return { 
-      success: results.length > 0, 
-      postedTo: results,
-      queueStatus 
-    };
-  } catch (error) {
-    console.error('Buffer posting failed:', error.message);
-    return { success: false, message: error.message };
-  }
-}
-
-// ===============================
 // FALLBACK POSTS
 // ===============================
 
