@@ -113,35 +113,10 @@ bot.on('message', async (msg) => {
       x: cleanPost(posts.x || '', productLink)
     };
     
-    // ===============================
-    // AUTO-POST TO SOCIAL MEDIA VIA BUFFER
-    // ===============================
-    
-    const bufferResult = await autoPostToBuffer(cleanedPosts, imageUrl);
-    
-    if (bufferResult.success) {
-      const postedPlatforms = bufferResult.postedTo.map(p => p.platform).join(', ');
-      await bot.sendMessage(
-        msg.chat.id,
-        `✅ *Auto-Posted Successfully!*\n\n` +
-        `📤 Posted to: ${postedPlatforms}\n` +
-        `📊 Buffer Queue: ${bufferResult.queueStatus.map(q => `${q.service}: ${q.pending_count}/10`).join(', ')}\n\n` +
-        `🔗 ${productLink}`,
-        { parse_mode: 'Markdown' }
-      );
-    } else {
-      // Send posts manually if Buffer fails
-      await bot.sendMessage(
-        msg.chat.id,
-        `⚠️ *Auto-posting failed*\n\nReason: ${bufferResult.message || 'Check Buffer setup'}\n\nSending posts manually:`,
-        { parse_mode: 'Markdown' }
-      );
-      
-      await bot.sendMessage(msg.chat.id, formatPost('📸', 'INSTAGRAM', cleanedPosts.instagram));
+     await bot.sendMessage(msg.chat.id, formatPost('📸', 'INSTAGRAM', cleanedPosts.instagram));
       await bot.sendMessage(msg.chat.id, formatPost('📘', 'FACEBOOK', cleanedPosts.facebook));
       await bot.sendMessage(msg.chat.id, formatPost('💬', 'WHATSAPP', cleanedPosts.whatsapp));
       await bot.sendMessage(msg.chat.id, formatPost('🐦', 'X', cleanedPosts.x));
-    }
     
   } catch (e) {
     console.log('❌ BOT ERROR:', e.message);
