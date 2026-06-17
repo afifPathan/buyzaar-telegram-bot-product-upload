@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-  "start": "node bot.js",
-  "dev": "nodemon bot.js"
-},
+    "start": "node bot.js",
+    "dev": "nodemon bot.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -19,6 +19,7 @@
     "form-data": "^4.0.5",
     "fs": "^0.0.1-security",
     "groq-sdk": "^1.2.0",
+    "host-my-pic": "^1.0.3",
     "node-telegram-bot-api": "^0.67.0"
   }
 }

@@ -1,3 +1,5 @@
+const FormData = require('form-data');
+
 const axios = require("axios");
 const ProductEnhancer = require("./productEnhancer");
 
@@ -151,31 +153,59 @@ class PriceUtil {
 }
 
 // ===============================
-// 3. IMAGE HANDLER
+// 3. IMAGE HANDLER - WITH FALLBACK
 // ===============================
 class ImageUtil {
   static async upload(imageUrl) {
-    if (!imageUrl || typeof imageUrl !== "string") {
+    console.log('\n📸 ===== IMAGE UPLOAD =====');
+    
+    if (!imageUrl) {
+      console.log('❌ No image URL provided');
       return "";
     }
+    
     try {
+      // Try FreeImage.host first
+      const FormData = require('form-data');
+      
+      // Download image
+      console.log('📥 Downloading image from Telegram...');
       const response = await axios.get(imageUrl, {
-        responseType: "arraybuffer",
+        responseType: 'arraybuffer',
         timeout: 10000
       });
-      const base64 = Buffer.from(response.data).toString("base64");
-      const formData = new URLSearchParams();
-      formData.append("image", base64);
-      const res = await axios.post(
-        `https://api.imgbb.com/1/upload?key=${process.env.IMGBB_API_KEY}`,
-        formData,
-        { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
-      );
-      return res?.data?.data?.url || "";
-    } catch (err) {
-      console.log("IMAGE ERROR:", err.message);
-      return "";
+      
+      const imageBuffer = Buffer.from(response.data);
+      console.log(`📦 Buffer size: ${imageBuffer.length} bytes`);
+      
+      // Upload to FreeImage.host
+      const formData = new FormData();
+      formData.append('image', imageBuffer.toString('base64'));
+      formData.append('key', '6d207e02198a847aa98d0a2a901485a5');
+      
+      console.log('📤 Uploading to FreeImage.host...');
+      
+      const uploadResponse = await axios.post('https://freeimage.host/api/1/upload', formData, {
+        headers: formData.getHeaders(),
+        timeout: 50000
+      });
+      
+      if (uploadResponse.data.status_code === 200 && uploadResponse.data.image) {
+        const result = uploadResponse.data.image.url;
+        console.log(`✅ Image URL: ${result.substring(0, 50)}...`);
+        console.log('📸 ===== IMAGE UPLOAD END =====\n');
+        return result;
+      }
+      
+      console.log('⚠️ Upload failed, using fallback');
+      
+    } catch (error) {
+      console.log(`⚠️ Upload error: ${error.message}`);
     }
+    
+    // Fallback: Return original Telegram URL
+    console.log('📸 ===== IMAGE UPLOAD END =====\n');
+    return imageUrl; // Original Telegram URL
   }
 }
 
